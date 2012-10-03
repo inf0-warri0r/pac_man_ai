@@ -147,7 +147,7 @@ ghost *nearest_ghost(){
 	else return g2;
 }
 
-void new_t(){
+void new_target(){
 	if(!is_sleep){
 		pill* p = closest_pill(px, py);
 		tx = p -> x;
@@ -170,7 +170,7 @@ void new_t(){
 		}
 	}
 }
-void new_t_g1(){
+void new_target_g1(){
 	while(1){
 		txg1 = rand() % 20;
 		tyg1 = rand() % 20;
@@ -179,7 +179,7 @@ void new_t_g1(){
 		}
 	}
 }
-void new_t_g2(){
+void new_target_g2(){
 	while(1){
 		txg2 = rand() % 20;
 		tyg2 = rand() % 20;
@@ -233,18 +233,18 @@ bool check(int x, int y, cnode *close_list){
 	}
 	return false;
 }
-onode * del_open_list(onode *n, onode *openlist){
-	onode *p = openlist;
-	if(p == NULL) return openlist;
+onode * del_open_list(onode *n, onode *open_list){
+	onode *p = open_list;
+	if(p == NULL) return open_list;
 	if(p == n){ 
-		openlist = p -> next;
-		return openlist;
+		open_list = p -> next;
+		return open_list;
 	}
 	while(p -> next != NULL){
 		if(p -> next == n) p -> next = p -> next -> next;
 		p = p -> next;
 	} 
-	return openlist;
+	return open_list;
 }
 
 int get_f(int x, int y){
@@ -300,7 +300,7 @@ int get_f_g(int x, int y, int tx, int ty){
 		int f = g + (dx + dy) * 10;
 		return f;
 }
-onode* set_open_list(node *n, onode *openlist, cnode *close_list){
+onode* set_open_list(node *n, onode *open_list, cnode *close_list){
 	int x = n -> x;
 	int y = n -> y;
 	int i = 0;
@@ -311,7 +311,7 @@ onode* set_open_list(node *n, onode *openlist, cnode *close_list){
 		tmp -> p = n;
 		int f = get_f(tmp -> x, tmp -> y);
 		
-		openlist = add_open_list(tmp, f, openlist);
+		open_list = add_open_list(tmp, f, open_list);
 		i++;
 	}
 	if(grid[y - 1][x] != '0' && !check1(x, y - 1, close_list)){
@@ -320,7 +320,7 @@ onode* set_open_list(node *n, onode *openlist, cnode *close_list){
 		tmp -> y = y - 1;
 		tmp -> p = n;
 		int f = get_f(tmp -> x, tmp -> y);
-		openlist = add_open_list(tmp, f, openlist);
+		open_list = add_open_list(tmp, f, open_list);
 		i++;
 	}
 	if(grid[y][x + 1] != '0' && !check1(x + 1, y, close_list)){
@@ -329,7 +329,7 @@ onode* set_open_list(node *n, onode *openlist, cnode *close_list){
 		tmp -> y = y;
 		tmp -> p = n;
 		int f = get_f(tmp -> x, tmp -> y);
-		openlist = add_open_list(tmp, f, openlist);
+		open_list = add_open_list(tmp, f, open_list);
 		i++;
 	}
 	if(grid[y][x - 1] != '0' && !check1(x - 1, y, close_list)){
@@ -339,12 +339,12 @@ onode* set_open_list(node *n, onode *openlist, cnode *close_list){
 		tmp -> p = n;
 		
 		int f = get_f(tmp -> x, tmp -> y);
-		openlist = add_open_list(tmp, f, openlist);
+		open_list = add_open_list(tmp, f, open_list);
 		i++;
 	}
-	return openlist;
+	return open_list;
 }
-onode * set_open_list_g(node *n, onode *openlist, cnode *close_list, int tx, int ty){
+onode * set_open_list_g(node *n, onode *open_list, cnode *close_list, int tx, int ty){
 	int x = n -> x;
 	int y = n -> y;
 	int i = 0;
@@ -355,7 +355,7 @@ onode * set_open_list_g(node *n, onode *openlist, cnode *close_list, int tx, int
 		tmp -> p = n;
 		int f = get_f_g(tmp -> x, tmp -> y, tx, ty);
 		
-		openlist = add_open_list(tmp, f, openlist);
+		open_list = add_open_list(tmp, f, open_list);
 		i++;
 	}
 	if(grid[y - 1][x] != '0' && !check(x, y - 1, close_list)){
@@ -364,7 +364,7 @@ onode * set_open_list_g(node *n, onode *openlist, cnode *close_list, int tx, int
 		tmp -> y = y - 1;
 		tmp -> p = n;
 		int f = get_f_g(tmp -> x, tmp -> y, tx, ty);
-		openlist = add_open_list(tmp, f, openlist);
+		open_list = add_open_list(tmp, f, open_list);
 		i++;
 	}
 	if(grid[y][x + 1] != '0' && !check(x + 1, y, close_list)){
@@ -373,7 +373,7 @@ onode * set_open_list_g(node *n, onode *openlist, cnode *close_list, int tx, int
 		tmp -> y = y;
 		tmp -> p = n;
 		int f = get_f_g(tmp -> x, tmp -> y, tx, ty);
-		openlist = add_open_list(tmp, f, openlist);
+		open_list = add_open_list(tmp, f, open_list);
 		i++;
 	}
 	if(grid[y][x - 1] != '0' && !check(x - 1, y, close_list)){
@@ -383,16 +383,16 @@ onode * set_open_list_g(node *n, onode *openlist, cnode *close_list, int tx, int
 		tmp -> p = n;
 		
 		int f = get_f_g(tmp -> x, tmp -> y, tx, ty);
-		openlist = add_open_list(tmp, f, openlist);
+		open_list = add_open_list(tmp, f, open_list);
 		i++;
 	}
-	return openlist;
+	return open_list;
 }
-onode *next_move(onode *openlist){
+onode *next_move(onode *open_list){
 	int min = 999999999;
 	onode *min_node;
 	int x, y;
-	onode *p = openlist;
+	onode *p = open_list;
 
 	while(p != NULL){
 		int f = p -> f;
@@ -468,7 +468,7 @@ void display(void)
 	
 	glutSwapBuffers();
 }
-node* get_path(node *n, node *path){
+node* trace_target(node *n, node *path){
 
 	node *p = n;
 	int i = 0;
@@ -486,54 +486,54 @@ node* get_path(node *n, node *path){
 	return path;
 }
 node *find_path(node *current_node){
-	onode *openlist = NULL;
+	onode *open_list = NULL;
 	cnode *close_list = NULL;
 	node *path = NULL;
 	int px, py;
 	while(1){
 		close_list = add_close_list(current_node, close_list);	
-		openlist = set_open_list(current_node, openlist, close_list);
-		onode *min = next_move(openlist);
+		open_list = set_open_list(current_node, open_list, close_list);
+		onode *min = next_move(open_list);
 		node *p;
 		if(min == NULL){
-			path = get_path(current_node, path);
+			path = trace_target(current_node, path);
 			return path;	
 		}else{
-			openlist = del_open_list(min, openlist);
+			open_list = del_open_list(min, open_list);
 			p = min -> n;
 			current_node = p;
 			px = current_node -> x;
 			py = current_node -> y;
 		}
 		if(px == tx && py == ty){
-			path = get_path(current_node, path);
+			path = trace_target(current_node, path);
 			return path;
 		}
 	}
 	return path;
 }
-node* find_path2(node *current_node, int tx, int ty){
-	onode *openlist = NULL;
+node* find_path_g(node *current_node, int tx, int ty){
+	onode *open_list = NULL;
 	cnode *close_list = NULL;
 	node *path = NULL;
 	int px, py;
 	while(1){
 		close_list = add_close_list(current_node, close_list);	
-		openlist = set_open_list_g(current_node, openlist, close_list, tx, ty);
-		onode *min = next_move(openlist);
+		open_list = set_open_list_g(current_node, open_list, close_list, tx, ty);
+		onode *min = next_move(open_list);
 		node *p;
 		if(min == NULL){
-			path = get_path(current_node, path);
+			path = trace_target(current_node, path);
 			return path;
 		}else{
-			openlist = del_open_list(min, openlist);
+			open_list = del_open_list(min, open_list);
 			p = min -> n;
 			current_node = p;
 			px = current_node -> x;
 			py = current_node -> y;
 		}
 		if(px == tx && py == ty){
-			path = get_path(current_node, path);
+			path = trace_target(current_node, path);
 			return path;
 		}
 	}
@@ -578,11 +578,11 @@ void myIdleFunc(int a) {
 			g1 -> caught = false;
 			g2 -> caught = false;
 			is_sleep = false;
-			new_t();
+			new_target();
 		}
 		sleep_count = 0;
 	}
-	if(is_sleep) new_t();
+	if(is_sleep) new_target();
 	path = find_path(current_node);
 	if(path != NULL){
 		node *p = path -> p;
@@ -592,7 +592,7 @@ void myIdleFunc(int a) {
 		}else{
 			px = 9;
 			py = 8;
-			new_t();
+			new_target();
 		}
 	}
 	if(grid[py][px] == '2'){
@@ -624,7 +624,7 @@ void myIdleFunc(int a) {
 			current_node_g1 -> x = g1 -> x = 8;
 			current_node_g1 -> y = g1 -> y = 9;
 			g1 -> caught = true;
-			new_t();
+			new_target();
 			score += 100;
 			cout << "score = " << score << " life = " << life << endl;
 		}
@@ -647,13 +647,13 @@ void myIdleFunc(int a) {
 			current_node_g2 -> x = g2 -> x = 10;
 			current_node_g2 -> y = g2 -> y = 9;
 			g2 -> caught = true;
-			new_t();
+			new_target();
 			score += 100;
 			cout << "score = " << score << " life = " << life << endl;
 		}
 	}
 	if(!g1 -> caught){
-		path_g1 = find_path2(current_node_g1, txg1, tyg1);
+		path_g1 = find_path_g(current_node_g1, txg1, tyg1);
 		if(path_g1 != NULL){
 			node *p = path_g1 -> p;
 			g1 -> x = p -> x;
@@ -661,7 +661,7 @@ void myIdleFunc(int a) {
 		}
 	}
 	if(!g2 -> caught){
-		path_g2 = find_path2(current_node_g2, txg2, tyg2);
+		path_g2 = find_path_g(current_node_g2, txg2, tyg2);
 		if(path_g2 != NULL){
 			node *p = path_g2 -> p;
 			g2 -> x = p -> x;
@@ -686,7 +686,7 @@ void myIdleFunc(int a) {
 			current_node_g1 -> x = g1 -> x = 8;
 			current_node_g1 -> y = g1 -> y = 9;
 			g1 -> caught = true;
-			new_t();
+			new_target();
 			score += 100;
 			cout << "score = " << score << " life = " << life << endl;
 		}
@@ -709,24 +709,24 @@ void myIdleFunc(int a) {
 			current_node_g2 -> x = g2 -> x = 10;
 			current_node_g2 -> y = g2 -> y = 9;
 			g2 -> caught = true;
-			new_t();
+			new_target();
 			score += 100;
 			cout << "score = " << score << " life = " << life << endl;
 		}
 	}
 	if(px == tx && py == ty){
-		new_t();
+		new_target();
 	}
 	if(g1 -> x == txg1 && g1 -> y == tyg1){
-		new_t_g1();
+		new_target_g1();
 	}
 	if(g2 -> x == txg2 && g2 -> y == tyg2){
-		new_t_g2();
+		new_target_g2();
 	}
 	if(counter >= 30){
 		counter = 0;
-		new_t_g1();
-		new_t_g2();
+		new_target_g1();
+		new_target_g2();
 	}
 	free(current_node);
 	free(current_node_g1);
@@ -766,7 +766,7 @@ void copy_file(){
 	int j = 0;
 
 	ifstream myReadFile;
-	myReadFile.open("grid2");
+	myReadFile.open("grid");
 	char c;
 	if (myReadFile.is_open()) {
 		while (!myReadFile.eof()) {
@@ -784,6 +784,9 @@ void copy_file(){
 				j++;
 			}
 		}
+	}else{
+		cout << "grid file error !!! " << endl;
+		exit(0);
 	}
 	myReadFile.close();
 }
@@ -826,7 +829,7 @@ int main(int argc, char** argv){
 	while(p != NULL){
 		p = p -> next;
 	}
-	new_t();
+	new_target();
 	glutInit(&argc,argv);
 	glutInitDisplayMode ( GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(700,700);
